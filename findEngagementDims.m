@@ -21,8 +21,8 @@ function info = findEngagementDims(Y, X, grps, grps_fine, signFlipStyle)
     if nargin < 3
         grps = unique(X);
     end
-    if nargin < 4
-        grps_fine = unique(X);
+    if nargin < 4 || isempty(grps_fine)
+        grps_fine = grps;
     end
     if nargin < 5
         signFlipStyle = 'mode';
