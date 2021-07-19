@@ -7,12 +7,12 @@
 rng('default'); rng(666); % for reproducibility
 T = 1000; % # of trials
 D = 90; % # of neurons
-grps = (0:45:359)'; % targets
-X = grps(randi(numel(grps), T, 1))'; % trial condition for each trial (T x 1)
+grps = (0:45:359)'; % trial conditions
+X = grps(randi(numel(grps), T, 1)); % trial condition for each trial (T x 1)
 Y = nan(T,D); % spike counts for each trial (T x D)
 pd = rad2deg(rand(D,1)*2*pi); % preferred directions (deg) per neuron (D x 1)
 mu = randn(D,1) + 10; % mean firing rate per neuron (D x 1)
-E = 1 + exp(-0.01*(1:T)); % neural engagement per trial (exponential decay) (T x 1)
+E = 1 + exp(-0.01*(1:T))'; % neural engagement per trial (exponential decay) (T x 1)
 for t = 1:T
     % find each neuron's response on this trial
     Y(t,:) = 2*E(t)*cosd(X(t) - pd) + E(t)*mu + randn(D,1)/1000;
@@ -22,9 +22,12 @@ end
 [C,Y] = pca(Y);
 
 %% 2. Find neural engagement axes, and then infer the level of neural engagement on each trial
+% One subtlety is that we need to specify which direction in neural firing space is equivalent to an increase (vs. a decrease) in neural engagement.
+% There are different approaches to this (see findEngagementDims.m), specified by signFlipStyle.
+% Here we set signFlipStyle to 'first', meaning neural engagement will increase along Y(:,1)
 
-grps_fine = (0:359)'; % for interpolating engagement dims between targets
 signFlipStyle = 'first'; % appropriate when C(:,1) is all the same sign
+grps_fine = grps; % to interpolate engagement dims to intermediate targets (optional), set this to (0:359)'
 info = findEngagementDims(Y, X, grps, grps_fine, signFlipStyle);
 Ehat = inferEngagementGivenAim(X, Y, info);
 
