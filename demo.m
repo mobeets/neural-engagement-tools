@@ -24,7 +24,7 @@ end
 %% 2. Find neural engagement axes, and then infer the level of neural engagement on each trial
 % One subtlety is that we need to specify which direction in neural firing space is equivalent to an increase (vs. a decrease) in neural engagement.
 % There are different approaches to this (see findEngagementDims.m), specified by signFlipStyle.
-% Here we set signFlipStyle to 'first', meaning neural engagement will increase along Y(:,1)
+% Here we set signFlipStyle to 'first' so that neural engagement will increase along the first dim of Y
 
 signFlipStyle = 'first'; % appropriate when C(:,1) is all the same sign
 grps_fine = grps; % to interpolate engagement dims to intermediate targets (optional), set this to (0:359)'
